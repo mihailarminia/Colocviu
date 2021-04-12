@@ -2,15 +2,17 @@ package ro.pub.cs.systems.eim.colocviu1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Colocviu1_MainActivity extends AppCompatActivity
 {
-    private Button north, south, east, west;
+    private Button north, south, east, west, anotherActivity;
     private TextView tv;
     private int noOfClicks;
 
@@ -24,6 +26,7 @@ public class Colocviu1_MainActivity extends AppCompatActivity
         south = (Button)findViewById(R.id.button2);
         east = (Button)findViewById(R.id.button3);
         west = (Button)findViewById(R.id.button4);
+        anotherActivity = (Button)findViewById(R.id.button5);
 
         tv = (TextView)findViewById(R.id.text1);
         tv.setText("");
@@ -101,6 +104,38 @@ public class Colocviu1_MainActivity extends AppCompatActivity
                 noOfClicks++;
             }
         });
+
+        anotherActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String instructions = tv.getText().toString();
+                Intent intentToChild = new Intent(Colocviu1_MainActivity.this, Colocviu1_SecondaryActivity.class);
+                intentToChild.putExtra(CONSTANTS.INSTRUCKTIONS_KEY, instructions);
+                startActivityForResult(intentToChild, CONSTANTS.MAIN_ACTIVITY_CODE);
+            }
+        });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        switch(requestCode)
+        {
+            case CONSTANTS.MAIN_ACTIVITY_CODE:
+            {
+                if (resultCode == CONSTANTS.REGISTER_CODE)
+                {
+                    Toast.makeText(getApplicationContext(), "REGISTER CLICKED", Toast.LENGTH_SHORT).show();
+                }
+                else if (resultCode == CONSTANTS.CANCEL_CODE)
+                {
+                    Toast.makeText(getApplicationContext(), "CANCEL CLICKED", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            default:
+                Log.d("TAG", "NIMIC");
+        }
     }
 
     @Override
