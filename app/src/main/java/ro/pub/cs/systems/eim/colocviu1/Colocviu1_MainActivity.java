@@ -37,7 +37,7 @@ public class Colocviu1_MainActivity extends AppCompatActivity
         tv = (TextView)findViewById(R.id.text1);
         tv.setText("");
 
-        intentFilter.addAction("ACTIUNE");
+        intentFilter.addAction(CONSTANTS.INTENT_ACTION);
 
         noOfClicks = 0;
 
@@ -202,7 +202,7 @@ public class Colocviu1_MainActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent)
         {
             Log.d("TAG", "AM PRINS MESAJUL");
-            Log.d("TAG", intent.getStringExtra("BROADCAST"));
+            Log.d("TAG", intent.getStringExtra(CONSTANTS.BROADCAST_TAG));
         }
     }
 }

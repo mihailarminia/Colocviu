@@ -7,4 +7,8 @@ public interface CONSTANTS {
     final int MAIN_ACTIVITY_CODE = 3;
 
     final String INSTRUCKTIONS_KEY = "instructionsKey";
+
+    final String INTENT_ACTION = "ACTIUNE";
+
+    final String BROADCAST_TAG = "BROADCAST";
 }
