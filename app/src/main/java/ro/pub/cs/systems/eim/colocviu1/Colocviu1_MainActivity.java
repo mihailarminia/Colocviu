@@ -2,7 +2,10 @@ package ro.pub.cs.systems.eim.colocviu1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +18,9 @@ public class Colocviu1_MainActivity extends AppCompatActivity
     private Button north, south, east, west, anotherActivity;
     private TextView tv;
     private int noOfClicks;
+
+    private MessageReceiver messageReceiver = new MessageReceiver();
+    private IntentFilter intentFilter = new IntentFilter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,6 +36,8 @@ public class Colocviu1_MainActivity extends AppCompatActivity
 
         tv = (TextView)findViewById(R.id.text1);
         tv.setText("");
+
+        intentFilter.addAction("ACTIUNE");
 
         noOfClicks = 0;
 
@@ -48,6 +56,7 @@ public class Colocviu1_MainActivity extends AppCompatActivity
 
                 tv.setText(value);
                 noOfClicks++;
+                handleButtonClicked();
             }
         });
 
@@ -66,6 +75,7 @@ public class Colocviu1_MainActivity extends AppCompatActivity
 
                 tv.setText(value);
                 noOfClicks++;
+                handleButtonClicked();
             }
         });
 
@@ -84,6 +94,7 @@ public class Colocviu1_MainActivity extends AppCompatActivity
 
                 tv.setText(value);
                 noOfClicks++;
+                handleButtonClicked();
             }
         });
 
@@ -102,6 +113,7 @@ public class Colocviu1_MainActivity extends AppCompatActivity
 
                 tv.setText(value);
                 noOfClicks++;
+                handleButtonClicked();
             }
         });
 
@@ -114,6 +126,30 @@ public class Colocviu1_MainActivity extends AppCompatActivity
                 startActivityForResult(intentToChild, CONSTANTS.MAIN_ACTIVITY_CODE);
             }
         });
+    }
+
+    private void handleButtonClicked()
+    {
+        if (noOfClicks == 4) //pornim serviciul
+        {
+            Intent serviceIntent = new Intent(getApplicationContext(), Colocviu1_Service.class);
+            serviceIntent.putExtra("KEY", tv.getText().toString());
+            getApplicationContext().startService(serviceIntent);
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        registerReceiver(messageReceiver, intentFilter);
+    }
+
+    @Override
+    public void onPause()
+    {
+        unregisterReceiver(messageReceiver);
+        super.onPause();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -157,6 +193,16 @@ public class Colocviu1_MainActivity extends AppCompatActivity
         {
             noOfClicks = savedInstanceState.getInt("NOOFCLICKS");
             Log.d("TAG", noOfClicks + "");
+        }
+    }
+
+    private class MessageReceiver extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            Log.d("TAG", "AM PRINS MESAJUL");
+            Log.d("TAG", intent.getStringExtra("BROADCAST"));
         }
     }
 }
